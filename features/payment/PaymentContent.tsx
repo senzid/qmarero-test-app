@@ -1,12 +1,40 @@
 "use client"
 
+import { useState, useMemo } from 'react'
 import { useSplitData } from '@/lib/use-split-data'
 import { PayButton } from '@/features/payment/PayButton'
 import Card from '@/components/Card'
 import { formatCurrency } from '@/lib/format-currency'
+import { Tips } from './Tips'
 
-export default function PaymentContent({ method }: { method: string }) {
+function distributeTip(tip: number, numPeople: number): number[] {
+  if (tip <= 0 || numPeople <= 0) {
+    return new Array(numPeople).fill(0)
+  }
+
+  const tipInCents = Math.round(tip * 100)
+  
+  const baseCentsPerPerson = Math.floor(tipInCents / numPeople)
+  const remainder = tipInCents % numPeople
+  
+  const distribution = new Array(numPeople).fill(baseCentsPerPerson)
+  for (let i = 0; i < remainder; i++) {
+    distribution[i] += 1
+  }
+  
+  return distribution.map(cents => cents / 100)
+}
+
+export default function PaymentContent({ method, initialTip }: { method: string, initialTip: number | null }) {
   const { splitData, isLoading } = useSplitData()
+  const [tip, setTip] = useState<number | null>(initialTip)
+
+  const tipDistribution = useMemo(() => {
+    if (!tip || tip <= 0 || !splitData) {
+      return new Array(splitData?.people.length || 0).fill(0)
+    }
+    return distributeTip(tip, splitData.people.length)
+  }, [tip, splitData])
 
   if (isLoading) {
     return (
@@ -34,34 +62,49 @@ export default function PaymentContent({ method }: { method: string }) {
           Resumen de pagos
         </h3>
         <div className="space-y-2">
-          {splitData.people.map(person => {
-            const total = splitData.personTotals[person.id] || 0
+          {splitData.people.map((person, index) => {
+            const baseTotal = splitData.personTotals[person.id] || 0
+            const tipPerPerson = tipDistribution[index] || 0
+            const totalWithTip = baseTotal + tipPerPerson
             
             return (
               <div
                 key={person.id}
-                className="flex justify-between items-center p-3 rounded-lg bg-slate-50"
+                className="min-h-12 px-3 py-1 rounded-lg bg-slate-50"
               >
-                <span className="font-medium text-slate-900">{person.name}</span>
-                <span className="font-semibold text-slate-900">
-                  {formatCurrency(total, splitData.currency)}
-                </span>
+                <div className="flex flex-1 justify-between items-center">
+                  <span className="font-medium text-slate-900">{person.name}</span>
+                  <span className="font-semibold text-slate-900">
+                    {formatCurrency(totalWithTip, splitData.currency)}
+                  </span>
+                </div>
+                {tip && tip > 0 && (
+                  <div className="flex justify-between items-center text-xs text-slate-500">
+                    <span>
+                      {formatCurrency(baseTotal, splitData.currency)} + {formatCurrency(tipPerPerson, splitData.currency)} propina
+                    </span>
+                  </div>
+                )}
               </div>
             )
           })}
         </div>
+
         <div className="mt-4 pt-4 border-t border-slate-200">
           <div className="flex justify-between items-center">
             <span className="text-lg font-medium text-slate-700">Total:</span>
             <span className="text-xl md:text-2xl font-bold text-slate-900">
-              {formatCurrency(splitData.grandTotal, splitData.currency)}
+              {formatCurrency(splitData.grandTotal + (tip || 0), splitData.currency)}
             </span>
           </div>
         </div>
       </Card>
 
       {method === 'card' ?
-        <PayButton splitData={splitData} method={method} /> 
+        <div className="w-full space-y-4">
+          <Tips tip={tip} setTip={setTip} />
+          <PayButton splitData={splitData} method={method} tip={tip} /> 
+        </div>
       :
         <Card className="border border-slate-200">
           <div className="flex flex-col items-center justify-center py-8 px-4">
@@ -85,13 +128,7 @@ export default function PaymentContent({ method }: { method: string }) {
           </div>
         </Card>
       }
-
-      
     </div>
   )
-  
-  
-  
-  
 }
 

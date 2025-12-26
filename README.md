@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Getting Started
 
-## Getting Started
+This project is hosted in a public GitHub repository and you can clone it. If you have any issues contact @senzid. You can see a production version of this project in [qamarero-test.vercel.app](https://qamarero-test.vercel.app/).
 
-First, run the development server:
+## Install the project locally
+
+First, you need to make a copy of the .env.example file and ask for the correct values to @senzid.
+
+After that, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This project is built on a "light version" of screaming architecture and applies basic concepts of hexagonal architecture to easily scale if it's necessary. It means that we have a features folder that contains all the logic (domain layer) and more folders that are structured to support our business logic. The folder structure is as follows:
 
-## Learn More
+### app
+Contains only routes (pages) files, but they contain no logic, only composition. Only renders components from features or components folder. Inside the api directory you can find 2 endpoints, 1 to obtain the restaurant's JSON bill and another to make payments
 
-To learn more about Next.js, take a look at the following resources:
+### components
+Contains our "dummy" components. This folder contains the components that I want to reuse, but they do not contain business logic. For example, components like Cards, Header, etc.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### context
+Contains generic context functions to share data throughout the application. It's an adapter layer.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### data
+JSON data for this test.
 
-## Deploy on Vercel
+### features
+This is the domain layer. **The most important part of our application** as it contains the business logic. Each specific feature has its own directory and it contains all the components or functions to manage itself. 
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### lib
+Contains generic types, generic functions or generic data fetching methods.

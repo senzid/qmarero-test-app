@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import RandomSplitOption from './RandomSplitOption';
 
 export default function HomeOptions() {
   return (
@@ -50,6 +51,10 @@ export default function HomeOptions() {
             </div>
           </div>
         </Link>
+
+        <div className="md:col-span-2">
+          <RandomSplitOption />
+        </div>
       </div>
     </div>
   );

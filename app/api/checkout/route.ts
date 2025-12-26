@@ -36,6 +36,9 @@ export async function POST(req: Request) {
   let cancelUrl = `${process.env.NEXT_PUBLIC_SITE_URL}`;
   if (splitData.method && splitData.type) {
     cancelUrl += `/payment?method=${splitData.method}&type=${splitData.type}`;
+    if (splitData.tip) {
+      cancelUrl += `&tip=${splitData.tip}`;
+    }
   }
   
   const lineItems = [
