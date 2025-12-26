@@ -1,16 +1,29 @@
 import Link from 'next/link';
 import RandomSplitOption from './RandomSplitOption';
+import BillReviewModal from './BillReviewModal';
+import { BillData } from '@/lib/types.d';
 
-export default function HomeOptions() {
+interface HomeOptionsProps {
+  billData: BillData;
+}
+
+export default function HomeOptions({ billData }: HomeOptionsProps) {
   return (
     <div className="space-y-6">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-slate-900 mb-2">
-          ¿Cómo quieres dividir la cuenta?
-        </h2>
-        <p className="text-slate-600">
-          Elige el método que mejor se adapte a tu situación
-        </p>
+      <div className="mb-8">
+        <div className="flex items-start justify-center gap-6 flex-wrap">
+          <div className="text-start flex-1 min-w-0">
+            <h2 className="text-3xl font-bold text-slate-900 mb-2">
+              ¿Cómo quieres dividir la cuenta?
+            </h2>
+            <p className="text-slate-600">
+              Elige el método que mejor se adapte a tu situación
+            </p>
+          </div>
+          <div className="shrink-0 flex items-center">
+            <BillReviewModal billData={billData} />
+          </div>
+        </div>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">

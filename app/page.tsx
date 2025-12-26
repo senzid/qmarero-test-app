@@ -10,7 +10,7 @@ export default async function Home() {
       <div className="container mx-auto px-4 pt-4 pb-8 max-w-4xl">
         <Header tableData={billData.table} headerConfigKey="home" />
         <div className="pt-4">
-          <HomeOptions />
+          <HomeOptions billData={billData} />
         </div>
       </div>
     </main>
