@@ -23,12 +23,12 @@ export default function PeopleSection({
   return (
     <Card>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-semibold text-slate-900">
+        <h2 className="text-xl md:text-2xl font-semibold text-slate-900">
           Comensales
         </h2>
         <button
           onClick={onAddPerson}
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+          className="px-3 py-2 text-sm md:text-base bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors md:px-4"
         >
           + Agregar persona
         </button>

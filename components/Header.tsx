@@ -6,31 +6,59 @@ type TableData = {
   server: string;
 };
 
-const titles: Record<string, string> = {
-  '/': 'Pagar la cuenta',
-  '/split-equal': 'Dividir por igual',
-  '/split-bill': 'Cada uno lo suyo',
-  '/payment': 'Pagar la cuenta',
-  '/success': 'Pago exitoso',
+const headerConfig = {
+  home: {
+    title: 'Pagar la cuenta',
+    showBackButton: false,
+    url: '/',
+    goBackUrl: '/payment',
+  },
+  splitEqual: {
+    title: 'Dividir por igual',
+    showBackButton: true,
+    url: '/split-equal',
+    goBackUrl: '/',
+  },
+  splitBill: {
+    title: 'Cada uno lo suyo',
+    showBackButton: true,
+    url: '/split-bill',
+    goBackUrl: '/',
+  },
+  payment: {
+    title: 'Pagar la cuenta',
+    showBackButton: true,
+    url: '/payment',
+    goBackUrl: '/',
+  },
+  success: {
+    title: 'Pago exitoso',
+    showBackButton: false,
+    url: '/success',
+    goBackUrl: '/',
+  },
 };
 
 export default function Header ({ 
   tableData,
-  pathname,
-  showBackButton = false
+  headerConfigKey,
+  customGoBackUrl
 }: { 
   tableData: TableData;
-  pathname: string;
-  showBackButton?: boolean;
+  headerConfigKey: keyof typeof headerConfig;
+  customGoBackUrl?: string;
 }) {
-  const title = titles[pathname] || 'Pagar la cuenta';
+
+  const { title, showBackButton, goBackUrl } = headerConfig[headerConfigKey];
+
+  const goBackHref = customGoBackUrl || goBackUrl
 
   return (
-    <header className="sticky top-0 z-50 bg-gradient-to-br from-slate-50 to-slate-100/90 backdrop-blur-sm bg-opacity-95 border-b border-slate-200/50 mb-8 -mx-4 px-4 py-4">
+    <header className="sticky top-0 z-50 bg-linear-to-br from-slate-50 to-slate-100/90 backdrop-blur-sm bg-opacity-95 border-b border-slate-200/50 mb-8 -mx-4 px-4 py-4">
       <div className="container mx-auto max-w-6xl">
         <div className="flex items-center gap-4 mb-3">
-          {showBackButton && <BackButton />}
-          <h1 className="text-4xl font-bold text-slate-900">
+          {showBackButton && <BackButton goBackHref={goBackHref} />}
+          <h1 className="text-3xl md:text-4xl font-bold text-slate-900">
             {title}
           </h1>
         </div>

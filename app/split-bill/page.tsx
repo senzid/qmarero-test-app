@@ -8,7 +8,7 @@ export default async function SplitBill() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="container mx-auto px-4 pt-4 pb-8 max-w-6xl">
-        <Header tableData={billData.table} pathname="/split-bill" showBackButton={true} />
+        <Header tableData={billData.table} headerConfigKey="splitBill" />
         <div className="pt-4">
           <BillSplitter billData={billData} />
         </div>

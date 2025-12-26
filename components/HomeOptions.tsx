@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function HomeOptions() {
   return (
-    <div className="mt-12 space-y-6">
+    <div className="space-y-6">
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-slate-900 mb-2">
           ¿Cómo quieres dividir la cuenta?
@@ -19,7 +19,7 @@ export default function HomeOptions() {
         >
           <div className="text-center">
             <div className="mb-4 text-5xl">⚖️</div>
-            <h3 className="text-2xl font-bold text-slate-900 mb-3 group-hover:text-green-600 transition-colors">
+            <h3 className="text-xl md:text-2xl font-bold text-slate-900 mb-3 group-hover:text-green-600 transition-colors">
               Dividir por igual
             </h3>
             <p className="text-slate-600 mb-4">
@@ -38,7 +38,7 @@ export default function HomeOptions() {
         >
           <div className="text-center">
             <div className="mb-4 text-5xl">🍽️</div>
-            <h3 className="text-2xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors">
+            <h3 className="text-xl md:text-2xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors">
               Cada uno lo suyo
             </h3>
             <p className="text-slate-600 mb-4">

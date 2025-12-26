@@ -10,7 +10,7 @@ export default async function SuccessPage() {
     <main className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <ClearSplitData />
       <div className="container mx-auto px-4 pt-4 pb-8 max-w-4xl">
-        <Header tableData={billData.table} pathname="/success" />
+        <Header tableData={billData.table} headerConfigKey="success" />
         
         <div className="pt-4">
           <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 text-center">

@@ -8,7 +8,7 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="container mx-auto px-4 pt-4 pb-8 max-w-4xl">
-        <Header tableData={billData.table} pathname="/" />
+        <Header tableData={billData.table} headerConfigKey="home" />
         <div className="pt-4">
           <HomeOptions />
         </div>

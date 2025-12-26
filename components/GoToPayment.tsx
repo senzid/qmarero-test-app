@@ -20,7 +20,7 @@ export default function GoToPayment({ type, disabled = false, unassignedTotal = 
   return (
     <div className="mt-8 space-y-6">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-slate-900 mb-2">
+        <h2 className="text-xl md:text-2xl font-bold text-slate-900 mb-2">
           ¿Cómo quieres pagar?
         </h2>
         <p className="text-slate-600">
@@ -31,7 +31,7 @@ export default function GoToPayment({ type, disabled = false, unassignedTotal = 
       {disabled && unassignedTotal > 0 && (
         <div className="mb-6 p-4 bg-amber-50 border-2 border-amber-300 rounded-lg">
           <div className="flex items-start gap-3">
-            <span className="text-2xl">⚠️</span>
+            <span className="text-xl md:text-2xl">⚠️</span>
             <div className="flex-1">
               <p className="font-semibold text-amber-900 mb-1">
                 No puedes proceder al pago
@@ -49,7 +49,7 @@ export default function GoToPayment({ type, disabled = false, unassignedTotal = 
           <div className={linkClassName}>
             <div className="text-center">
               <div className="mb-4 text-5xl">👋</div>
-              <h3 className="text-2xl font-bold text-slate-500 mb-3">
+              <h3 className="text-xl md:text-2xl font-bold text-slate-500 mb-3">
                 Avisar al camarero
               </h3>
               <p className="text-slate-500 mb-4">
@@ -67,7 +67,7 @@ export default function GoToPayment({ type, disabled = false, unassignedTotal = 
           >
             <div className="text-center">
               <div className="mb-4 text-5xl">👋</div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-3 group-hover:text-slate-700 transition-colors">
+              <h3 className="text-xl md:text-2xl font-bold text-slate-900 mb-3 group-hover:text-slate-700 transition-colors">
                 Avisar al camarero
               </h3>
               <p className="text-slate-600 mb-4">
@@ -85,7 +85,7 @@ export default function GoToPayment({ type, disabled = false, unassignedTotal = 
           <div className={linkClassNameHighlighted}>
             <div className="text-center">
               <div className="mb-4 text-5xl">💳</div>
-              <h3 className="text-2xl font-bold text-slate-500 mb-3">
+              <h3 className="text-xl md:text-2xl font-bold text-slate-500 mb-3">
                 Pago rápido en mesa
               </h3>
               <p className="text-slate-500 mb-4">
@@ -108,7 +108,7 @@ export default function GoToPayment({ type, disabled = false, unassignedTotal = 
             
             <div className="text-center">
               <div className="mb-4 text-5xl">💳</div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-3 group-hover:text-green-600 transition-colors">
+              <h3 className="text-xl md:text-2xl font-bold text-slate-900 mb-3 group-hover:text-green-600 transition-colors">
                 Pago rápido en mesa
               </h3>
               <p className="text-slate-600 mb-4">

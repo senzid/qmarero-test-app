@@ -1,14 +1,11 @@
-'use client';
+import Link from 'next/link';
 
-import { useRouter } from 'next/navigation';
-
-export default function BackButton() {
-  const router = useRouter();
+export default function BackButton({ goBackHref }: { goBackHref: string }) {
   
   return (
-    <button
-      onClick={() => router.back()}
-      className="flex items-center justify-center w-10 h-10 rounded-full bg-white hover:bg-slate-100 transition-colors shadow-sm border border-slate-200"
+    <Link
+      href={goBackHref}
+      className="flex items-center justify-center w-8 h-8 rounded-full bg-white hover:bg-slate-100 transition-colors shadow-sm border border-slate-200 md:w-10 md:h-10"
       aria-label="Volver atrás"
     >
       <svg
@@ -25,7 +22,7 @@ export default function BackButton() {
           d="M15 19l-7-7 7-7"
         />
       </svg>
-    </button>
+    </Link>
   );
 }
 

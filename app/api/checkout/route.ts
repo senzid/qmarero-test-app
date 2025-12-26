@@ -29,6 +29,7 @@ export async function POST(req: Request) {
   }
 
   const grandTotal = data.items.reduce((acc: number, item: BillItem) => acc + item.unitPrice * item.qty, 0);
+  const tip = splitData.tip || 0;
 
   const unitAmount = parseInt(formatCurrency(grandTotal, data.currency).replace(/[^0-9]/g, ''));
 
@@ -37,20 +38,36 @@ export async function POST(req: Request) {
     cancelUrl += `/payment?method=${splitData.method}&type=${splitData.type}`;
   }
   
+  const lineItems = [
+    {
+      price_data: {
+        currency: 'eur',
+        unit_amount: unitAmount,
+        product_data: {
+          name: `Servicio: ${data.table.name}`,
+        },
+      },
+      quantity: 1,
+    },
+  ]
+
+  if (tip > 0) {
+    const tipAmount = parseInt(formatCurrency(tip, data.currency).replace(/[^0-9]/g, ''));
+    lineItems.push({
+      price_data: {
+        currency: 'eur',
+        unit_amount: tipAmount,
+        product_data: {
+          name: 'Propina',
+        },
+      },
+      quantity: 1,
+    })
+  }
+  
   const session = await stripe.checkout.sessions.create({
     mode: 'payment',
-    line_items: [
-      {
-        price_data: {
-          currency: 'eur',
-          unit_amount: unitAmount,
-          product_data: {
-            name: `Servicio: ${data.table.name}`,
-          },
-        },
-        quantity: 1,
-      },
-    ],
+    line_items: lineItems,
     success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: cancelUrl,
     metadata: {

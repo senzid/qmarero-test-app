@@ -53,7 +53,7 @@ export default function PaymentContent({ method }: { method: string }) {
         <div className="mt-4 pt-4 border-t border-slate-200">
           <div className="flex justify-between items-center">
             <span className="text-lg font-medium text-slate-700">Total:</span>
-            <span className="text-2xl font-bold text-slate-900">
+            <span className="text-xl md:text-2xl font-bold text-slate-900">
               {formatCurrency(splitData.grandTotal, splitData.currency)}
             </span>
           </div>
@@ -81,7 +81,7 @@ export default function PaymentContent({ method }: { method: string }) {
               </svg>
             </div>
             <p className="text-slate-700 font-medium text-lg">Listo para pagar</p>
-            <p className="text-slate-500 text-sm mt-1">Solicita la cuenta al camarero</p>
+            <p className="text-slate-500 text-sm mt-1">Avisa y solicita la cuenta al camarero</p>
           </div>
         </Card>
       }

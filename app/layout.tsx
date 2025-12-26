@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   description: "Qamarero App for pay the bill on table",
 };
 
+// Hacer el layout dinámico para evitar prerenderizado durante el build
+export const dynamic = 'force-dynamic';
+
 export default async function RootLayout({
   children,
 }: Readonly<{

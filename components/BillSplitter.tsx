@@ -53,10 +53,28 @@ export default function BillSplitter({ billData }: { billData: BillData }) {
   const [people, setPeople] = useState<Person[]>(initialState.people);
   const [itemAssignments, setItemAssignments] = useState<ItemAssignment>(initialState.itemAssignments);
 
+  // Helper function to split an amount correctly using centimos
+  const splitAmount = (amount: number, numPeople: number): { [index: number]: number } => {
+    if (numPeople === 0) return {};
+    
+    const totalCentimos = Math.round(amount * 100);
+    const baseCentimos = Math.floor(totalCentimos / numPeople);
+    const resto = totalCentimos % numPeople;
+    
+    const amounts: { [index: number]: number } = {};
+    for (let i = 0; i < numPeople; i++) {
+      const centimos = baseCentimos + (i < resto ? 1 : 0);
+      amounts[i] = centimos / 100;
+    }
+    
+    return amounts;
+  };
+
   // Calculate totals
   const calculations = useMemo(() => {
     const itemTotals: { [itemId: string]: number } = {};
     const personTotals: { [personId: string]: number } = {};
+    const itemPerPerson: { [itemId: string]: { min: number; max: number; hasRemainder: boolean } } = {};
     
     // Initialize person totals
     people.forEach(person => {
@@ -71,9 +89,20 @@ export default function BillSplitter({ billData }: { billData: BillData }) {
       const assignedPeople = itemAssignments[item.id] || [];
       
       if (assignedPeople.length > 0) {
-        const perPerson = total / assignedPeople.length;
-        assignedPeople.forEach(personId => {
-          personTotals[personId] = (personTotals[personId] || 0) + perPerson;
+        // Split using centimos to avoid rounding errors
+        const splitAmounts = splitAmount(total, assignedPeople.length);
+        
+        // Calculate min/max for display
+        const amounts = Object.values(splitAmounts);
+        const min = Math.min(...amounts);
+        const max = Math.max(...amounts);
+        const hasRemainder = min !== max;
+        
+        itemPerPerson[item.id] = { min, max, hasRemainder };
+        
+        // Assign amounts to people (distribute remainder to first people)
+        assignedPeople.forEach((personId, index) => {
+          personTotals[personId] = (personTotals[personId] || 0) + splitAmounts[index];
         });
       }
     });
@@ -88,6 +117,7 @@ export default function BillSplitter({ billData }: { billData: BillData }) {
       personTotals,
       grandTotal,
       unassignedTotal,
+      itemPerPerson,
     };
   }, [billData.items, itemAssignments, people]);
 
@@ -166,7 +196,7 @@ export default function BillSplitter({ billData }: { billData: BillData }) {
       />
 
       <Card>
-        <h2 className="text-2xl font-semibold text-slate-900 mb-4">
+        <h2 className="text-xl md:text-2xl font-semibold text-slate-900 mb-4">
           Items de la cuenta
         </h2>
         <div className="space-y-4">
@@ -184,7 +214,7 @@ export default function BillSplitter({ billData }: { billData: BillData }) {
                     : 'border-slate-200 bg-slate-50 /50'
                 }`}
               >
-                <div className="flex items-start justify-between mb-3">
+                <div className="flex gap-2 md:gap-0 items-start justify-between mb-3">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-1">
                       <h3 className="font-semibold text-slate-900">
@@ -203,14 +233,27 @@ export default function BillSplitter({ billData }: { billData: BillData }) {
                       <span className="text-lg font-bold text-slate-900">
                         {formatCurrency(itemTotal, billData.currency)}
                       </span>
-                      {isFullyAssigned && (
-                        <span className="text-sm text-green-700 font-medium">
-                          {formatCurrency(itemTotal / assignedPeople.length, billData.currency)} por persona
-                        </span>
-                      )}
+                      {isFullyAssigned && (() => {
+                        const perPersonInfo = calculations.itemPerPerson[item.id];
+                        if (!perPersonInfo) return null;
+                        
+                        return (
+                          <span className="text-sm text-green-700 font-medium">
+                            {perPersonInfo.hasRemainder ? (
+                              <>
+                                {formatCurrency(perPersonInfo.min, billData.currency)} - {formatCurrency(perPersonInfo.max, billData.currency)} por persona
+                              </>
+                            ) : (
+                              <>
+                                {formatCurrency(perPersonInfo.min, billData.currency)} por persona
+                              </>
+                            )}
+                          </span>
+                        );
+                      })()}
                     </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col md:flex-row gap-2">
                     <button
                       onClick={() => splitItemEqually(item.id)}
                       className="px-3 py-1 text-sm bg-blue-100 text-blue-700 hover:bg-blue-200 rounded-md transition-colors"
@@ -260,7 +303,7 @@ export default function BillSplitter({ billData }: { billData: BillData }) {
       </Card>
 
       <Card>
-        <h2 className="text-2xl font-semibold text-slate-900 mb-4">
+        <h2 className="text-xl md:text-2xl font-semibold text-slate-900 mb-4">
           Resumen de pagos
         </h2>
         
@@ -269,7 +312,7 @@ export default function BillSplitter({ billData }: { billData: BillData }) {
             <span className="text-lg font-medium text-slate-700">
               Total de la cuenta:
             </span>
-            <span className="text-2xl font-bold text-slate-900">
+            <span className="text-xl md:text-2xl font-bold text-slate-900">
               {formatCurrency(calculations.grandTotal, billData.currency)}
             </span>
           </div>
@@ -288,7 +331,7 @@ export default function BillSplitter({ billData }: { billData: BillData }) {
                   <span className="font-semibold text-slate-900">
                     {person.name}
                   </span>
-                  <span className="text-xl font-bold text-slate-900">
+                  <span className="text-xl md:text-2xl font-bold text-slate-900">
                     {formatCurrency(total, billData.currency)}
                   </span>
                 </div>

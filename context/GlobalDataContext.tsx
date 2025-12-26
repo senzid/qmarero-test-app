@@ -11,7 +11,7 @@ type GlobalItem = {
 
 const GlobalDataContext = createContext<GlobalItem[] | null>(null)
 
-export function GlobalDataProvider({ data, children }: { data: GlobalItem[], children: React.ReactNode }) {
+export function GlobalDataProvider({ data, children }: { data: GlobalItem[] | null, children: React.ReactNode }) {
 
   return (
     <GlobalDataContext.Provider value={data}>
