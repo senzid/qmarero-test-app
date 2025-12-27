@@ -1,7 +1,7 @@
 import React from 'react'
 
 export function Tips({ tip, setTip }: { tip: number | null, setTip: (tip: number | null) => void }) {
-  console.log(tip)
+
   return (
     <div>
     <label className="block text-sm font-medium text-slate-700 mb-2">
