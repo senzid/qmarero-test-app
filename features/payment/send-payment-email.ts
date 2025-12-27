@@ -38,6 +38,9 @@ export async function sendPaymentEmailFromSession(sessionId: string): Promise<vo
     throw new Error('No se encontraron datos de división')
   }
 
+  console.log('[EMAIL] Datos de división encontrados:', splitDataJson)
+  console.log('[EMAIL] Datos de división encontrados:', billData)
+
   const splitData = JSON.parse(splitDataJson)
   const { people, personTotals, currency } = splitData
   const tip = parseFloat(session.metadata?.tip || '0')
